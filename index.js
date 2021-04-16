@@ -30,7 +30,7 @@ instance.prototype.updateConfig = function (config) {
 
 	self.config = config;
 	self.init_tcp();
-	
+
 };
 
 instance.prototype.init = function () {
@@ -71,6 +71,8 @@ instance.prototype.init_tcp = function() {
 		self.socket.on('connect', function () {
 			self.status(self.STATE_OK);
 			debug("Connected");
+			// get status
+			self.sendCmd('<s>');
 		})
 
 		self.socket.on('data', function (chunk) {
