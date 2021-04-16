@@ -101,26 +101,51 @@ instance.prototype.init_tcp = function() {
 				switch (line.substr(0,1))
 				{
 					case 'X': {
+						// nothing defined
 						self.log('info','No data found')
 						break;
 					}
+					case 'p': {
+						// power status
+						break;
+					}
 					case 'i': {
+						// command station info
 						self.log('info',line.substr(1).trim())
+						break;
+					}
+					case 'Q': {
+						// sensors
+						self.log('info','Sensor: ' + line.trim())
+						break;
+					}
+					case 'q': {
+						// sensors
+						self.log('info','Sensor: ' + line.trim())
+						break;
+					}
+					case 'H': {
+						// turnouts
+						self.log('info','Turnout: ' + line.trim())
+						break;
+					}
+					case 'Y': {
+						// output pins
+						self.log('info','Output: ' + line.trim())
 						break;
 					}
 					case 'c': {
+						// track current
 						self.log('info',line.substr(1).trim())
 						break;
 					}
+					default:
+						break;
 				}
 			}
 		});
 	}
 };
-
-instance.prototype.ab2str = function (buf) {
-	return String.fromCharCode.apply(null, new Uint16Array(buf))
-}
 
 // Return config fields for web config
 instance.prototype.config_fields = function () {
@@ -309,11 +334,11 @@ instance.prototype.actions = function (system) {
 			]
 		},
 		'info': {
-			label: 'Information',
+			label: 'Get State',
 			options: [
 				{
 				type: 'dropdown',
-				label: 'Information to display in log',
+				label: 'Information to display in Companion log',
 				id: 'infoCommand',
 				default: 'c',
 				choices: [
