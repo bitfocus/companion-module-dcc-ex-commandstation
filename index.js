@@ -46,7 +46,8 @@ instance.prototype.init = function () {
 
 instance.prototype.init_tcp = function() {
 	var self = this;
-
+	var receivebuffer = '';
+	
 	if (self.socket !== undefined) {
 		self.socket.destroy();
 		delete self.socket;
@@ -72,9 +73,54 @@ instance.prototype.init_tcp = function() {
 			debug("Connected");
 		})
 
-		self.socket.on('data', function (data) {});
+		self.socket.on('data', function (chunk) {
+			console.log('DCC Received ' + chunk.length + ' bytes ', chunk)
+			
+			var i = 0, line = '', offset = 0;
+			receivebuffer += chunk;
+			
+			// Split up Lines with new line and Process
+			while ( (i = receivebuffer.indexOf('\n', offset)) !== -1) {
+				line = receivebuffer.substr(offset, i - offset)
+				offset = i + 1
+				console.log(line.toString())
+				line = line.replace('<','');
+				line = line.replace('>','');
+				console.log(line);
+				if (self.config.debuglog === true) {
+					self.log('debug','Received: ' + line)
+				}
+				self.socket.emit('receiveline', line.toString())
+			}
+			receivebuffer = receivebuffer.substr(offset)
+		});
+		
+		self.socket.on('receiveline', function (line) {
+			if (line.length > 0)
+			{
+				switch (line.substr(0,1))
+				{
+					case 'X': {
+						self.log('info','No data found')
+						break;
+					}
+					case 'i': {
+						self.log('info',line.substr(1).trim())
+						break;
+					}
+					case 'c': {
+						self.log('info',line.substr(1).trim())
+						break;
+					}
+				}
+			}
+		});
 	}
 };
+
+instance.prototype.ab2str = function (buf) {
+	return String.fromCharCode.apply(null, new Uint16Array(buf))
+}
 
 // Return config fields for web config
 instance.prototype.config_fields = function () {
@@ -101,6 +147,13 @@ instance.prototype.config_fields = function () {
 			width: 6,
 			default: '2560',
 			regex: self.REGEX_PORT
+		},
+		{
+			type: 'checkbox',
+			id: 'debuglog',
+			label: 'Show all return values in debug log',
+			width: 6,
+			default: false,
 		}
 	]
 };
@@ -255,6 +308,25 @@ instance.prototype.actions = function (system) {
 				}			
 			]
 		},
+		'info': {
+			label: 'Information',
+			options: [
+				{
+				type: 'dropdown',
+				label: 'Information to display in log',
+				id: 'infoCommand',
+				default: 'c',
+				choices: [
+					{ id: 'c', label: 'Show main track current'},
+					{ id: 's', label: 'Show command station status'},
+					{ id: 'Q', label: 'List status of all sensors'},
+					{ id: 'S', label: 'List all defined sensors'},
+					{ id: 'T', label: 'List all defined turnouts'},
+					{ id: 'Z', label: 'List all defined output pins'},
+					]
+				}
+			]
+		},
 		'custom': {
 			label: 'Custom',
 			options: [
@@ -276,33 +348,33 @@ instance.prototype.action = function (action) {
 	switch (action.action) {
 		
 		case 'power': {
-		
 			console.log('power: ' + opt.selectedFunction);
 			self.sendCmd(opt.selectedFunction);
 			break;		
 		}
 		case 'throttle': {
-		
 			console.log('throttle: ' + opt.dccAddress + ' ' + opt.speed + ' ' + opt.direction);
 			self.sendCmd('<t 1 ' + opt.dccAddress + ' ' + opt.speed + ' ' + opt.direction + '>');
 			break;	
 		}	
 		case 'functions': {
-			
 			var fnCmd = opt.dccAddress + ' ' + opt.f + ' ' + Number(opt.state);
 			console.log('function: ' + fnCmd);
 			self.sendCmd('<F ' + fnCmd + '>');
 			break;	
 		}
 		case 'accessory': {
-			
 			var acCmd = opt.acAddress + ' ' + opt.acSubAddress + ' ' + Number(opt.acState);
 			console.log('accessory: ' + acCmd);
 			self.sendCmd('<a ' + acCmd + '>');
 			break;	
 		}		
+		case 'info': {
+			console.log('info: ' + opt.infoCommand);
+			self.sendCmd('<' + opt.infoCommand + '>');
+			break;	
+		}
 		case 'custom': {
-		
 			console.log('custom: ' + opt.customCommand);
 			self.sendCmd('<' + opt.customCommand + '>');
 			break;	
