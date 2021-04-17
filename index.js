@@ -133,6 +133,8 @@ instance.prototype.init_tcp = function() {
 		self.socket.on('connect', function () {
 			self.status(self.STATE_OK);
 			console.log("Connected");
+			
+			self.sendCmd('<s>')
 		})
 
 		self.socket.on('data', function (chunk) {
