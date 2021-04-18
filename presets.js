@@ -32,6 +32,24 @@ exports.get_presets = function (instanceLabel) {
 				},
 			}],	
 		})
+		
+		presets.push({
+			category: 'Power',
+			label: 'All Stop',
+			bank: {
+				style: 'text',
+				text: 'All Stop',
+				size: '24',
+				color: 16777215,
+				bgcolor: 16711680
+			},
+			actions: [{
+				action: 'power',
+				options: {
+					selectedFunction: '!',
+				}
+			}],
+		})
 
 	return presets
 }
