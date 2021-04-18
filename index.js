@@ -268,8 +268,7 @@ instance.prototype.feedback = function (event, bank) {
 	
 	switch (event.type) {
 		case 'powerFeedback': {
-			console.log(self.powerState)
-			console.log(event.options.powerState)
+			// console.log(self.powerState + ' ' + event.options.powerState)
 			if (self.powerState === event.options.powerState) {
 				return {
 					color: event.options.fg,
