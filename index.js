@@ -125,14 +125,14 @@ instance.prototype.init_tcp = function() {
 		});
 
 		self.socket.on('error', function (err) {
-			console.log("Network error", err);
+			console.log('Network error', err);
 			self.status(self.STATE_ERROR, err);
-			self.log('error',"Network error: " + err.message);
+			self.log('error','Network error: ' + err.message);
 		});
 
 		self.socket.on('connect', function () {
 			self.status(self.STATE_OK);
-			console.log("Connected");
+			console.log('Connected');
 			
 			self.sendCmd('<s>')
 		})
@@ -268,7 +268,7 @@ instance.prototype.feedback = function (event, bank) {
 	
 	switch (event.type) {
 		case 'powerFeedback': {
-			// console.log(self.powerState + ' ' + event.options.powerState)
+			console.log(self.powerState + ' ' + event.options.powerState)
 			if (self.powerState === event.options.powerState) {
 				return {
 					color: event.options.fg,
@@ -477,7 +477,7 @@ instance.prototype.sendCmd = function(cmdStr) {
 	console.log(sendBuf);
 
 	if (sendBuf != '') {
-		// self.log('info','sending ',sendBuf,"to",self.config.host);
+		// self.log('info','sending ',sendBuf,'to',self.config.host);
 
 		if (self.socket !== undefined && self.socket.connected) {
 			self.socket.send(sendBuf);
