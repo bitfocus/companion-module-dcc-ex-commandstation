@@ -292,7 +292,7 @@ instance.prototype.actions = function (system) {
 			options: [
 				{
 					type: 'dropdown',
-					label: 'function',
+					label: 'Function',
 					id: 'selectedFunction',
 					default: '0',
 					choices: self.powerOptions,
