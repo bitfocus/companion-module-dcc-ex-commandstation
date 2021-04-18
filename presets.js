@@ -24,6 +24,13 @@ exports.get_presets = function (instanceLabel) {
 					selectedFunction: '0',
 				}
 			}],
+			feedbacks: [{
+				type: 'powerFeedback',
+				options: {
+					fg: 16777215,
+					bg: 6723840,
+				},
+			}],	
 		})
 
 	return presets
