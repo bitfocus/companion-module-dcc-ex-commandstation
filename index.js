@@ -94,8 +94,11 @@ instance.prototype.init_feedbacks = function (system) {
 				type: 'dropdown',
 				label: 'Power State',
 				id: 'powerState',
-				default: '1 MAIN',
-				choices: self.powerOptions,
+				default: '1',
+				choices: [
+					{ id: '1', label: 'Power On' },
+					{ id: '0', label: 'Power Off' }, 
+				]
 			},
 		],
 	}
@@ -150,7 +153,6 @@ instance.prototype.init_tcp = function() {
 				console.log(line.toString())
 				line = line.replace('<','')
 				line = line.replace('>','')
-				console.log(line);
 				if (self.config.debuglog === true) {
 					self.log('debug','Received: ' + line)
 				}
@@ -172,7 +174,8 @@ instance.prototype.init_tcp = function() {
 					case 'p': {
 						// power status
 						self.setVariable('Power',line.substr(1).trim())
-						self.powerState = line.substr(1).trim()
+						// take only first char (0 or 1)
+						self.powerState = line.substr(1,1).trim()
 						self.checkFeedbacks('powerFeedback')
 						break;
 					}
