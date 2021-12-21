@@ -33,6 +33,7 @@ instance.prototype.updateConfig = function (config) {
 
 	self.setVariable('Version',null)
 	self.setVariable('Power',null)
+	self.setVariable('DirectionPst',self.direction)
 	
 	self.config = config
 	self.init_tcp()
@@ -53,8 +54,14 @@ instance.prototype.init = function () {
 		{
 			label: 'Track Power State',
 			name: 'Power',
-		}
+		},
+		{
+			label: 'Direction Preset',
+			name: 'DirectionPst',
+		},
 	])
+	
+	self.direction = 0
 
 	// setup
 	self.actions()
@@ -299,6 +306,21 @@ instance.prototype.actions = function (system) {
 				},
 			],
 		},
+		'direction': {
+			label: 'Direction Preset',
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Direction',
+					id: 'direction_preset',
+					default: '1',
+					choices: [
+					{ id: '1', label: 'Forward'},
+					{ id: '0', label: 'Reverse'},
+					{ id: 'toggle', label: 'Toggle'}]
+				}
+			]
+		},
 		'throttle': {
 			label: 'Throttle',
 			options: [
@@ -325,7 +347,8 @@ instance.prototype.actions = function (system) {
 					default: '1',
 					choices: [
 					{ id: '1', label: 'Forward'},
-					{ id: '0', label: 'Reverse'}]
+					{ id: '0', label: 'Reverse'},
+					{ id: 'pst', label: 'Preset'}]
 				}
 			]
 		},
@@ -416,43 +439,59 @@ instance.prototype.actions = function (system) {
 };
 
 instance.prototype.action = function (action) {
-	var self = this;
-	const opt = action.options;
-	console.log('action: ' + action.action);
+	var self = this
+	const opt = action.options
+	console.log('action: ' + action.action)
 	
 	switch (action.action) {
 		
 		case 'power': {
-			console.log('power: ' + opt.selectedFunction);
-			self.sendCmd('<' + opt.selectedFunction + '>');
-			break;		
+			console.log('power: ' + opt.selectedFunction)
+			self.sendCmd('<' + opt.selectedFunction + '>')
+			break
+		}
+		case 'direction': {
+			
+			if (opt.direction_preset === 'toggle') {
+				self.direction = self.direction ? 0 : 1
+			} else {
+				self.direction = opt.direction_preset
+			}
+			self.setVariable('DirectionPst',self.direction)
+			console.log('direction preset: ' + self.direction)
 		}
 		case 'throttle': {
-			console.log('throttle: ' + opt.dccAddress + ' ' + opt.speed + ' ' + opt.direction);
-			self.sendCmd('<t 1 ' + opt.dccAddress + ' ' + opt.speed + ' ' + opt.direction + '>');
-			break;	
+			
+			if (opt.direction === 'pst') {
+				self.sendCmd('<t 1 ' + opt.dccAddress + ' ' + opt.speed + ' ' + self.direction + '>')
+				console.log('throttle: ' + opt.dccAddress + ' ' + opt.speed + ' ' + self.direction)
+			} else {
+				self.sendCmd('<t 1 ' + opt.dccAddress + ' ' + opt.speed + ' ' + opt.direction + '>')
+				console.log('throttle: ' + opt.dccAddress + ' ' + opt.speed + ' ' + opt.direction)
+			}
+			break
 		}	
 		case 'functions': {
-			var fnCmd = opt.dccAddress + ' ' + opt.f + ' ' + Number(opt.state);
-			console.log('function: ' + fnCmd);
-			self.sendCmd('<F ' + fnCmd + '>');
-			break;	
+			var fnCmd = opt.dccAddress + ' ' + opt.f + ' ' + Number(opt.state)
+			console.log('function: ' + fnCmd)
+			self.sendCmd('<F ' + fnCmd + '>')
+			break
 		}
 		case 'accessory': {
-			var acCmd = opt.acAddress + ' ' + opt.acSubAddress + ' ' + Number(opt.acState);
-			console.log('accessory: ' + acCmd);
-			self.sendCmd('<a ' + acCmd + '>');
-			break;	
+			var acCmd = opt.acAddress + ' ' + opt.acSubAddress + ' ' + Number(opt.acState)
+			console.log('accessory: ' + acCmd)
+			self.sendCmd('<a ' + acCmd + '>')
+			break
 		}		
 		case 'info': {
-			console.log('info: ' + opt.infoCommand);
-			self.sendCmd('<' + opt.infoCommand + '>');
-			break;	
+			console.log('info: ' + opt.infoCommand)
+			self.sendCmd('<' + opt.infoCommand + '>')
+			break
 		}
 		case 'custom': {
-			console.log('custom: ' + opt.customCommand);
-			self.sendCmd('<' + opt.customCommand + '>');
-			break;	
+			console.log('custom: ' + opt.customCommand)
+			self.sendCmd('<' + opt.customCommand + '>')
+			break
 		}		
 		default:
 			break;
