@@ -387,7 +387,7 @@ instance.prototype.actions = function (system) {
 					label: 'Address',
 					id: 'acAddress',
 					min: 0,
-					max: 511,
+					max: 2044,
 					default: 0
 				},
 				{
