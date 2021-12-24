@@ -391,14 +391,6 @@ instance.prototype.actions = function (system) {
 					default: 0
 				},
 				{
-					type: 'number',
-					label: 'Sub Address',
-					id: 'acSubAddress',
-					min: 0,
-					max: 3,
-					default: 0
-				},
-				{
 					type: 'checkbox',
 					label: 'State',
 					id: 'acState',
@@ -478,7 +470,7 @@ instance.prototype.action = function (action) {
 			break
 		}
 		case 'accessory': {
-			var acCmd = opt.acAddress + ' ' + opt.acSubAddress + ' ' + Number(opt.acState)
+			var acCmd = opt.acAddress + ' ' + Number(opt.acState)
 			console.log('accessory: ' + acCmd)
 			self.sendCmd('<a ' + acCmd + '>')
 			break
