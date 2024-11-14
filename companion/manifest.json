@@ -1,0 +1,33 @@
+{
+	"id": "dcc-ex-commandstation",
+	"name": "dcc-ex-commandstation",
+	"shortname": "dcc-ex",
+	"description": "Companion Module for DCC-EX Command Station",
+	"version": "2.0.0",
+	"license": "MIT",
+	"repository": "git+https://github.com/bitfocus/companion-module-dcc-ex-commandstation.git",
+	"bugs": "https://github.com/bitfocus/companion-module-dcc-ex-commandstation/issues",
+	"maintainers": [
+		{
+			"name": "Peter Daniel"
+		}
+	],
+	"legacyIds": [
+	],
+	"runtime": {
+		"type": "node18",
+		"api": "nodejs-ipc",
+		"apiVersion": "0.0.0",
+		"entrypoint": "../index.js"
+	},
+	"manufacturer": "DCC-EX",
+	"products": [ 
+		"DCC-EX" 
+	],
+	"keywords": [
+		"DCC",
+		"Railway",
+		"Control",
+		"Modelling"
+	]
+}
