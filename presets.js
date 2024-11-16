@@ -57,6 +57,49 @@ export function updatePresets() {
 		}
 	}
 
+	for (let j = 0; j <= 68; j++) {
+		presets['F' + j] = {
+			type: 'button',
+			category: 'Decoder Function',
+			name: 'Button to toggle F' + j,
+			style: {
+				text: 'F' + j,
+				size: '24',
+				bgcolor: combineRgb(0, 0, 0),
+				color: combineRgb(255, 255, 255),
+			},
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'function',
+							options: {
+								address: '$(' + this.label + ':locoAddress)',
+								decoderFunction: j,
+								functionState: true,
+							},
+						},
+					],
+					up: [],
+				},
+				{
+					down: [
+						{
+							actionId: 'function',
+							options: {
+								address: '$(' + this.label + ':locoAddress)',
+								decoderFunction: j,
+								functionState: false,
+							},
+						},
+					],
+					up: [],
+				},
+			],
+			feedbacks: [],
+		}
+	}
+
 	presets['All Stop'] = {
 		type: 'button',
 		category: 'Loco',
