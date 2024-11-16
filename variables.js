@@ -17,6 +17,10 @@ export function updateVariables() {
 		{
 			name: 'Power Status',
 			variableId: 'power',
+		},
+		{
+			name: 'Selected Loco DCC Address',
+			variableId: 'locoAddress',
 		}
 	)
 	this.setVariableDefinitions(variables)

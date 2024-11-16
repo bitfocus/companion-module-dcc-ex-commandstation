@@ -16,7 +16,7 @@ export function updateActions() {
 					{ id: '1', label: 'On Both Tracks' },
 					{ id: '0 MAIN', label: 'Off Main' },
 					{ id: '0 PROG', label: 'Off Prog' },
-					{ id: '0 JOIN', label: 'Off Join' },
+					// { id: '0 JOIN', label: 'Off Join' }, not implemented?
 					{ id: '0', label: 'Off Both Tracks' },
 				],
 			},
@@ -44,17 +44,20 @@ export function updateActions() {
 			this.sendCmd(cmd)
 		},
 	}
-	
+
 	actions['throttle'] = {
 		name: 'Throttle',
 		options: [
 			{
-				type: 'number',
+				type: 'textinput',
 				label: 'DCC Address',
 				id: 'address',
 				default: 3,
-				min: 1,
-				max: 10293
+				useVariables: true,
+				tooltip:
+					'Use $(' +
+					this.label +
+					':locoAddress) if you want to change the DCC address using a separate select loco action button',
 			},
 			{
 				type: 'number',
@@ -62,7 +65,7 @@ export function updateActions() {
 				id: 'speed',
 				default: 0,
 				min: 0,
-				max: 127
+				max: 127,
 			},
 			{
 				type: 'dropdown',
@@ -71,26 +74,34 @@ export function updateActions() {
 				default: '1',
 				choices: [
 					{ id: '1', label: 'Forward' },
-					{ id: '0', label: 'Reverse' }
-				]
+					{ id: '0', label: 'Reverse' },
+				],
 			},
 		],
-		callback: ({ options }) => {
-			var cmd = '<t ' + options.address + ' ' + options.speed + ' ' + options.direction + '>'
-			this.sendCmd(cmd)
-		}
+		callback: async (action, context) => {
+			var dcc = await context.parseVariablesInString(action.options.address)
+			if (Number(dcc) > 0 && Number(dcc) < 10294) {
+				var cmd = '<t ' + dcc + ' ' + action.options.speed + ' ' + action.options.direction + '>'
+				this.sendCmd(cmd)
+			} else {
+				this.log('warn', dcc + ' is not a valid DCC address')
+			}
+		},
 	}
 
 	actions['function'] = {
 		name: 'Decoder Function',
 		options: [
 			{
-				type: 'number',
+				type: 'textinput',
 				label: 'DCC Address',
 				id: 'address',
 				default: 3,
-				min: 1,
-				max: 10293
+				useVariables: true,
+				tooltip:
+					'Use $(' +
+					this.label +
+					':locoAddress) if you want to change the DCC address using a separate select loco action button',
 			},
 			{
 				type: 'number',
@@ -98,21 +109,26 @@ export function updateActions() {
 				id: 'decoderFunction',
 				default: 0,
 				min: 0,
-				max: 68
+				max: 68,
 			},
 			{
 				type: 'checkbox',
 				label: 'State',
 				id: 'functionState',
-				default: false
+				default: false,
 			},
 		],
-		callback: ({ options }) => {
-			var cmd = '<F ' + options.address + ' ' + options.decoderFunction + ' ' + Number(options.functionState) + '>'
-			this.sendCmd(cmd)
-		}
+		callback: async (action, context) => {
+			var dcc = await context.parseVariablesInString(action.options.address)
+			if (Number(dcc) > 0 && Number(dcc) < 10294) {
+				var cmd = '<F ' + dcc + ' ' + action.options.decoderFunction + ' ' + Number(action.options.functionState) + '>'
+				this.sendCmd(cmd)
+			} else {
+				this.log('warn', dcc + ' is not a valid DCC address')
+			}
+		},
 	}
-	
+
 	actions['accessorySubAddress'] = {
 		name: 'Accessory (address and sub-address)',
 		options: [
@@ -122,7 +138,7 @@ export function updateActions() {
 				id: 'address',
 				default: 0,
 				min: 0,
-				max: 511
+				max: 511,
 			},
 			{
 				type: 'number',
@@ -130,21 +146,21 @@ export function updateActions() {
 				id: 'subAddress',
 				default: 0,
 				min: 0,
-				max: 3
+				max: 3,
 			},
 			{
 				type: 'checkbox',
 				label: 'State',
 				id: 'functionState',
-				default: false
+				default: false,
 			},
 		],
 		callback: ({ options }) => {
 			var cmd = '<a ' + options.address + ' ' + options.subAddress + ' ' + Number(options.functionState) + '>'
 			this.sendCmd(cmd)
-		}
+		},
 	}
-	
+
 	actions['accessoryLinear'] = {
 		name: 'Accessory (linear address)',
 		options: [
@@ -154,19 +170,53 @@ export function updateActions() {
 				id: 'address',
 				default: 1,
 				min: 1,
-				max: 2044
+				max: 2044,
+				useVariables: true,
 			},
 			{
 				type: 'checkbox',
 				label: 'State',
 				id: 'functionState',
-				default: false
+				default: false,
 			},
 		],
 		callback: ({ options }) => {
 			var cmd = '<a ' + options.address + ' ' + Number(options.functionState) + '>'
 			this.sendCmd(cmd)
-		}
+		},
+	}
+
+	actions['locoSelect'] = {
+		name: 'Set Loco Address',
+		options: [
+			{
+				type: 'number',
+				label: 'Set DCC address for currently selected loco variable',
+				id: 'address',
+				default: 3,
+				min: 1,
+				max: 10293,
+			},
+		],
+		callback: ({ options }) => {
+			this.setVariableValues({ locoAddress: options.address })
+			this.checkFeedbacks('addressFeedback')
+		},
+	}
+
+	actions['custom'] = {
+		name: 'Custom Command',
+		options: [
+			{
+				type: 'textinput',
+				label: 'Custom command string',
+				id: 'customCommand',
+			},
+		],
+		callback: ({ options }) => {
+			var cmd = options.customCommand
+			this.sendCmd(cmd)
+		},
 	}
 
 	this.setActionDefinitions(actions)
@@ -188,26 +238,6 @@ export function updateActions() {
 // 			]
 // 		},
 
-
-// 		'accessory': {
-// 			label: 'Accessory',
-// 			options: [
-// 				{
-// 					type: 'number',
-// 					label: 'Address',
-// 					id: 'acAddress',
-// 					min: 0,
-// 					max: 2044,
-// 					default: 0
-// 				},
-// 				{
-// 					type: 'checkbox',
-// 					label: 'State',
-// 					id: 'acState',
-// 					default: false
-// 				}
-// 			]
-// 		},
 // 		'info': {
 // 			label: 'Get State',
 // 			options: [
@@ -227,32 +257,13 @@ export function updateActions() {
 // 				}
 // 			]
 // 		},
-// 		'custom': {
-// 			label: 'Custom',
-// 			options: [
-// 				{
-// 					type: 'textinput',
-// 					label: 'Custom command string excluding start and end brackets',
-// 					id: 'customCommand'
-// 				}
-// 			]
-// 		}
+
 // 	});
 // };
 //
-//
-// instance.prototype.action = function (action) {
-// 	var self = this
-// 	const opt = action.options
-// 	console.log('action: ' + action.action)
-//
 // 	switch (action.action) {
 //
-// 		case 'power': {
-// 			console.log('power: ' + opt.selectedFunction)
-// 			self.sendCmd('<' + opt.selectedFunction + '>')
-// 			break
-// 		}
+
 // 		case 'direction': {
 //
 // 			if (opt.direction_preset === 'toggle') {
@@ -274,29 +285,9 @@ export function updateActions() {
 // 			}
 // 			break
 // 		}
-// 		case 'functions': {
-// 			var fnCmd = opt.dccAddress + ' ' + opt.f + ' ' + Number(opt.state)
-// 			console.log('function: ' + fnCmd)
-// 			self.sendCmd('<F ' + fnCmd + '>')
-// 			break
-// 		}
-// 		case 'accessory': {
-// 			var acCmd = opt.acAddress + ' ' + Number(opt.acState)
-// 			console.log('accessory: ' + acCmd)
-// 			self.sendCmd('<a ' + acCmd + '>')
-// 			break
-// 		}
+
 // 		case 'info': {
 // 			console.log('info: ' + opt.infoCommand)
 // 			self.sendCmd('<' + opt.infoCommand + '>')
 // 			break
 // 		}
-// 		case 'custom': {
-// 			console.log('custom: ' + opt.customCommand)
-// 			self.sendCmd('<' + opt.customCommand + '>')
-// 			break
-// 		}
-// 		default:
-// 			break;
-// 	}
-// };

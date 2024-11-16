@@ -2,17 +2,18 @@ import { InstanceBase, InstanceStatus, Regex, runEntrypoint, TCPHelper } from '@
 import { updateActions } from './actions.js'
 import { updateVariables } from './variables.js'
 import { updateFeedbacks } from './feedback.js'
+import { updatePresets } from './presets.js'
 
 class DCCEX extends InstanceBase {
 	constructor(internal) {
 		super(internal)
-	
+
 		this.updateActions = updateActions.bind(this)
 		this.updateFeedbacks = updateFeedbacks.bind(this)
-		// this.updatePresets = updatePresets.bind(this)
+		this.updatePresets = updatePresets.bind(this)
 		this.updateVariables = updateVariables.bind(this)
 	}
-	
+
 	getConfigFields() {
 		return [
 			{
@@ -20,7 +21,7 @@ class DCCEX extends InstanceBase {
 				id: 'info',
 				width: 12,
 				label: 'Information',
-				value: 'This module is for DCC++EX Command Station (Version 4)'
+				value: 'This module is for DCC-EX Command Station (Version 5)',
 			},
 			{
 				type: 'textinput',
@@ -45,185 +46,145 @@ class DCCEX extends InstanceBase {
 				label: 'Show all return values in debug log',
 				width: 6,
 				default: false,
-			}
+			},
 		]
 	}
-	
+
 	async destroy() {
 		debug('destroy', this.id)
-		
-		var self = this;
-		
+
+		var self = this
+
 		if (self.socket !== undefined) {
-			self.socket.destroy();
+			self.socket.destroy()
 		}
 	}
-	
+
 	async init(config) {
-		console.log('init DCC-EX')
-	
+		console.log('init ' + this.label)
+
 		this.config = config
-		
+
 		this.stash = []
 		this.locos = []
 		this.powerState = null
-	
+
 		this.updateActions()
 		this.updateVariables()
 		this.updateFeedbacks()
-		// this.updatePresets()
+		this.updatePresets()
 
 		this.initTCP()
-
 	}
-	
+
 	async configUpdated(config) {
 		console.log('configUpdated')
-	
+
 		let resetConnection = false
-		
+
 		if (this.config.host != config.host) {
 			resetConnection = true
 		}
-	
+
 		this.config = config
 
 		this.updateActions()
 		this.updateVariables()
 		this.updateFeedbacks()
-		// this.updatePresets()
-		
+		this.updatePresets()
+
 		if (resetConnection === true || this.socket === undefined) {
 			this.initTCP()
 		}
-		
 	}
-
-
-// function instance(system, id, config) {
-// 	var self = this
-// 	
-// 	self.powerOptions = [
-
-// 		]
-// 
-// 	// super-constructor
-// 	instance_skel.apply(this, arguments)
-// 
-// 	return self
-// }
-
-// instance.prototype.init_presets = function () {
-// 	var self = this
-// 	self.setPresetDefinitions(presets.get_presets(self.label))
-// }
-
-
 
 	initTCP() {
 		console.log('initTCP ' + this.config.host + ':' + this.config.port)
+		console.log
 
 		this.receiveBuffer = ''
-		
+
 		if (this.socket !== undefined) {
 			this.socket.destroy()
 			delete this.socket
 		}
-		
+
 		if (this.config.host) {
-				this.socket = new TCPHelper(this.config.host, this.config.port)
-		
-				this.socket.on('status_change', (status, message) => {
-					this.updateStatus(status, message)
-				})
-		
-				this.socket.on('error', (err) => {
-					console.log('Network error', err)
-					this.log('error', 'Network error: ' + err.message)
-					this.updateStatus(InstanceStatus.ConnectionFailure, err.message)
-					// this.poll = false
-				})
-		
-				this.socket.on('connect', () => {
-					this.log('info','Connected')
-					// get command station status
-					this.sendCmd('<s>')
-					// poll every second
-					// this.poll = true
-					// this.timer = setInterval(this.dataPoller.bind(this), 1000)
-				})
-		
-				// separate buffered stream into lines with responses
-				this.socket.on('data', (chunk) => {
-					// this.log('debug', 'receiving: ' + chunk)
-					
-					var i = 0,
-						line = '',
-						offset = 0
-					this.receiveBuffer += chunk
-		
-					while ((i = this.receiveBuffer.indexOf('\n', offset)) !== -1) {
-						line = this.receiveBuffer.substr(offset, i - offset)
-						offset = i + 1
-						if (line.toString() != 'ACK') {
-							this.socket.emit('receiveline', line.toString())
-							// console.log(line.toString())
-						}
-					}
-		
-					this.receiveBuffer = this.receiveBuffer.substr(offset)
-				})
-		
-				this.socket.on('receiveline', (line) => {
-					// if (this.command === null && line.match(/:/)) {
-		// 				this.command = line
-		// 			} else if (this.command !== null && line.length > 0) {
-		// 				this.stash.push(line.trim())
-		// 			} else if (line.length === 0 && this.command !== null) {
-		// 				var cmd = this.command.trim().split(/:/)[0]
-		// 				var obj = {}
-		// 				this.stash.forEach(function (val) {
-		// 					var info = val.split(/\s*:\s*/)
-		// 					obj[info.shift()] = info.join(':')
-		// 				})
-		// 
-						this.processDeviceInformation(line)
-		
-					// 	this.stash = []
-					// 	this.command = null
-					// } else if (line.length > 0) {
-					// 	console.log('weird response from device: ' + line.toString() + ' ' + line.length)
-					// }
-				})
-			}
+			this.socket = new TCPHelper(this.config.host, this.config.port)
+
+			this.socket.on('status_change', (status, message) => {
+				this.updateStatus(status, message)
+			})
+
+			this.socket.on('error', (err) => {
+				console.log('Network error', err)
+				this.log('error', 'Network error: ' + err.message)
+				this.updateStatus(InstanceStatus.ConnectionFailure, err.message)
+				// this.poll = false
+			})
+
+			this.socket.on('connect', () => {
+				this.log('info', 'Connected')
+				// get command station status
+				this.sendCmd('<s>')
+				// poll every second
+				// this.poll = true
+				// this.timer = setInterval(this.dataPoller.bind(this), 1000)
+			})
+
+			// separate buffered stream into lines with responses
+			this.socket.on('data', (chunk) => {
+				// this.log('debug', 'receiving: ' + chunk)
+
+				var i = 0,
+					line = '',
+					offset = 0
+				this.receiveBuffer += chunk
+
+				while ((i = this.receiveBuffer.indexOf('\n', offset)) !== -1) {
+					line = this.receiveBuffer.substr(offset, i - offset)
+					offset = i + 1
+				}
+
+				this.receiveBuffer = this.receiveBuffer.substr(offset)
+			})
+
+			this.socket.on('receiveline', (line) => {
+				// if (this.command === null && line.match(/:/)) {
+				// 				this.command = line
+				// 			} else if (this.command !== null && line.length > 0) {
+				// 				this.stash.push(line.trim())
+				// 			} else if (line.length === 0 && this.command !== null) {
+				// 				var cmd = this.command.trim().split(/:/)[0]
+				// 				var obj = {}
+				// 				this.stash.forEach(function (val) {
+				// 					var info = val.split(/\s*:\s*/)
+				// 					obj[info.shift()] = info.join(':')
+				// 				})
+				//
+				this.processDeviceInformation(line)
+
+				// 	this.stash = []
+				// 	this.command = null
+				// } else if (line.length > 0) {
+				// 	console.log('weird response from device: ' + line.toString() + ' ' + line.length)
+				// }
+			})
 		}
-		
+	}
+
 	processDeviceInformation(line) {
 		this.log('debug', 'process: ' + line)
-		
+
 		// strip < from start and > from end
-		line = line.replace('<','')
-		line = line.replace('>','')
-		
+		line = line.replace('<', '')
+		line = line.replace('>', '')
+
 		if (line.length > 0) {
-			switch (line.substr(0,1))
-			{
-				case 'X': {
-					// nothing defined
-					this.log('info','No data found')
-					break
-				}
-				case 'p': {
-					// power status
-					this.powerState = line.substr(1).trim()
-					this.setVariableValues({ power: this.powerState })
-					
-			 		// self.checkFeedbacks('powerFeedback')
-					break
-				}
+			switch (line.substr(0, 1)) {
 				case 'i': {
 					// command station info
-					this.log('info',line.substr(1).trim())
+					this.log('info', line.substr(1).trim())
 					let infoArr = line.substr(1).split('/')
 					this.setVariableValues({ version: infoArr[0] })
 					this.setVariableValues({ model: infoArr[1] })
@@ -231,44 +192,61 @@ class DCCEX extends InstanceBase {
 					break
 				}
 				case 'l': {
-					// loco data
+					// loco data broadcast
+					let locoArr = line.split(' ')
+					console.log(locoArr)
+					this.locos.push(locoArr)
+					console.log(this.locos)
+					break
+				}
+				case 'p': {
+					// power status broadcast
+					this.powerState = line.substr(1).trim()
+					this.setVariableValues({ power: this.powerState })
+					this.checkFeedbacks('powerFeedback')
+					this.checkFeedbacks('joinFeedback')
+					break
+				}
+				case 'X': {
+					// nothing defined
+					this.log('info', 'No data found')
 					break
 				}
 			}
 		}
 	}
-	
+
 	// 	self.status(self.STATE_WARNING, 'Connecting');
-	// 
+	//
 	// 	var options = { reconnect_interval: 5000 }
-	// 
+	//
 	// 	if (self.config.host) {
 	// 		self.socket = new tcp(self.config.host, self.config.port, options);
-	// 
+	//
 	// 		self.socket.on('status_change', function (status, message) {
 	// 			console.log(message)
 	// 			self.status(status, message);
 	// 		});
-	// 
+	//
 	// 		self.socket.on('error', function (err) {
 	// 			console.log('Network error', err);
 	// 			self.status(self.STATE_ERROR, err);
 	// 			self.log('error','Network error: ' + err.message);
 	// 		});
-	// 
+	//
 	// 		self.socket.on('connect', function () {
 	// 			self.status(self.STATE_OK);
 	// 			console.log('Connected');
-	// 			
+	//
 	// 			self.sendCmd('<s>')
 	// 		})
-	// 
+	//
 	// 		self.socket.on('data', function (chunk) {
 	// 			console.log('DCC Received ' + chunk.length + ' bytes ', chunk)
-	// 			
+	//
 	// 			var i = 0, line = '', offset = 0;
 	// 			receivebuffer += chunk;
-	// 			
+	//
 	// 			// Split up Lines with new line and Process
 	// 			while ( (i = receivebuffer.indexOf('\n', offset)) !== -1) {
 	// 				line = receivebuffer.substr(offset, i - offset)
@@ -283,25 +261,14 @@ class DCCEX extends InstanceBase {
 	// 			}
 	// 			receivebuffer = receivebuffer.substr(offset)
 	// 		});
-	// 		
+	//
 	// 		self.socket.on('receiveline', function (line) {
 	// 			if (line.length > 0)
 	// 			{
 	// 				switch (line.substr(0,1))
 	// 				{
-	// 					case 'X': {
-	// 						// nothing defined
-	// 						self.log('info','No data found')
-	// 						break;
-	// 					}
-	// 					case 'p': {
-	// 						// power status
-	// 						self.setVariable('Power',line.substr(1).trim())
-	// 						// take only first char (0 or 1)
-	// 						self.powerState = line.substr(1,1).trim()
-	// 						self.checkFeedbacks('powerFeedback')
-	// 						break;
-	// 					}
+
+
 
 	// 					case 'Q': {
 	// 						// sensors
@@ -341,13 +308,13 @@ class DCCEX extends InstanceBase {
 		var cmd = unescape(cmd)
 		var end = '\r'
 
-		/* 
-	 	* create a binary buffer pre-encoded 'latin1' (8bit no change bytes)
-	 	* sending a string assumes 'utf8' encoding 
-	 	* which then escapes character values over 0x7F
-	 	* and destroys the 'binary' content
-	 	*/
-		var sendBuf = Buffer.from(cmd + end, 'latin1');
+		/*
+		 * create a binary buffer pre-encoded 'latin1' (8bit no change bytes)
+		 * sending a string assumes 'utf8' encoding
+		 * which then escapes character values over 0x7F
+		 * and destroys the 'binary' content
+		 */
+		var sendBuf = Buffer.from(cmd + end, 'latin1')
 
 		if (sendBuf !== undefined) {
 			// this.log('info','sending ',sendBuf,'to',self.config.host);
@@ -355,7 +322,7 @@ class DCCEX extends InstanceBase {
 			if (this.socket !== undefined) {
 				this.socket.send(sendBuf)
 			} else {
-				this.log('warn','Socket not connected');
+				this.log('warn', 'Socket not connected')
 			}
 		}
 	}
