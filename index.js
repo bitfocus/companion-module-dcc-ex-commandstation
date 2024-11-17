@@ -51,7 +51,7 @@ class DCCEX extends InstanceBase {
 	}
 
 	async destroy() {
-		debug('destroy', this.id)
+		this.log('debug', 'destroy ' + this.id + ' ' + this.label)
 
 		var self = this
 
@@ -282,6 +282,7 @@ class DCCEX extends InstanceBase {
 
 	decodeSpeedByte(value) {
 		// console.log('decode: ' + value)
+		var speed = 0
 
 		if (value == 0) {
 			// stop reverse
@@ -295,7 +296,7 @@ class DCCEX extends InstanceBase {
 
 		if (value > 1 && value < 128) {
 			// reverse speed
-			var speed = value - 1
+			speed = value - 1
 			return speed + ' Reverse'
 		}
 
@@ -306,7 +307,7 @@ class DCCEX extends InstanceBase {
 
 		if (value > 128) {
 			// forward speed
-			var speed = value - 129
+			speed = value - 129
 			return speed + ' Forward'
 		}
 	}
@@ -314,7 +315,7 @@ class DCCEX extends InstanceBase {
 	sendCmd(cmd) {
 		this.log('debug', 'sending: ' + cmd)
 
-		var cmd = unescape(cmd)
+		cmd = unescape(cmd)
 		var end = '\r'
 
 		var sendBuf = Buffer.from(cmd + end, 'latin1')
