@@ -175,7 +175,7 @@ class DCCEX extends InstanceBase {
 					// console.log('index of ' + this.socket.receivebuffer.indexOf('\n', offset))
 					line = this.socket.receivebuffer.substr(offset, i - offset)
 					// console.log(line)
-					offset = i + 2
+					offset = i + 1
 					this.socket.emit('receiveline', line.toString())
 				}
 				this.socket.receivebuffer = this.socket.receivebuffer.substr(offset)
@@ -198,6 +198,10 @@ class DCCEX extends InstanceBase {
 		if (line.length > 0) {
 			switch (line.substr(0, 1)) {
 				// examine first character only
+				case 'H': {
+					// defined turnouts/Points
+					break
+				}
 				case 'i': {
 					// command station info
 					this.log('info', line.substr(1).trim())
@@ -218,6 +222,14 @@ class DCCEX extends InstanceBase {
 					this.setVariableValues({ power: this.powerState })
 					this.checkFeedbacks('powerFeedback')
 					this.checkFeedbacks('joinFeedback')
+					break
+				}
+				case 'q': {
+					// defined sensors
+					break
+				}
+				case 'Q': {
+					// defined sensors
 					break
 				}
 				case 'X': {
@@ -269,22 +281,27 @@ class DCCEX extends InstanceBase {
 	}
 
 	decodeSpeedByte(value) {
-		console.log('decode: ' + value)
+		// console.log('decode: ' + value)
 
 		if (value == 0) {
 			// stop reverse
 			return '0 Stop (Reverse)'
 		}
-
-		if (value == 128) {
-			// stop forward
-			return '0 Stop (Forward)'
+		
+		if (value == 1) {
+			// invalid?
+			return 'Stopped'
 		}
 
 		if (value > 1 && value < 128) {
 			// reverse speed
 			var speed = value - 1
 			return speed + ' Reverse'
+		}
+
+		if (value == 128) {
+			// stop forward
+			return '0 Stop (Forward)'
 		}
 
 		if (value > 128) {
