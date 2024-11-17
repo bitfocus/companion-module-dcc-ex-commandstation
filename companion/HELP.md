@@ -7,9 +7,8 @@ This module will allow you to control a [DCC-EX CommandStation](https://dcc-ex.c
 ## Requirements
 This is the setup I use, many other combinations of hardware will work.
 
-* CommandStation-EX running on Arduino Mega with motor shield and WiFi
+* CommandStation-EX (version 5) running with a network connection
   * [Follow these instructions](https://dcc-ex.com/get-started/index.html)
-* Track power and external PSU wired to motor shield
 * Network connection between CommandStation-EX and Companion (both on same LAN)
 * An instance of the DCC-EX module running in Companion
   * Enter the IP address of the Arduino running CommandStation
@@ -18,8 +17,11 @@ This is the setup I use, many other combinations of hardware will work.
 ## Version History
 
 ### Version 1.0.0
-First Release
+* First Release
 
 ### Version 2.0.0
-Updated for Companion 3
-
+* Updated for Companion 3
+* Add selected loco variable
+* Add loco throttle variables
+* Add power, join and selected address feedback
+* Add function presets
