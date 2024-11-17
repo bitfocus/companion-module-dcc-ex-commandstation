@@ -206,9 +206,9 @@ class DCCEX extends InstanceBase {
 					// command station info
 					this.log('info', line.substr(1).trim())
 					let infoArr = line.substr(1).split('/')
-					this.setVariableValues({ version: infoArr[0] })
-					this.setVariableValues({ model: infoArr[1] })
-					this.setVariableValues({ motor: infoArr[2] })
+					this.setVariableValues({ version: infoArr[0].trim() })
+					this.setVariableValues({ model: infoArr[1].trim() })
+					this.setVariableValues({ motor: infoArr[2].trim() })
 					break
 				}
 				case 'l': {
