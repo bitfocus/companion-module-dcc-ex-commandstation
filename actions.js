@@ -30,7 +30,7 @@ export function updateActions() {
 	actions['stop'] = {
 		name: 'Emergency Stop',
 		options: [],
-		callback: (action) => {
+		callback: () => {
 			var cmd = '<!>'
 			this.sendCmd(cmd)
 		},
@@ -39,7 +39,7 @@ export function updateActions() {
 	actions['reset'] = {
 		name: 'Reset Command Station',
 		options: [],
-		callback: (action) => {
+		callback: () => {
 			var cmd = '<D RESET>'
 			this.sendCmd(cmd)
 		},
