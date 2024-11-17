@@ -287,7 +287,7 @@ class DCCEX extends InstanceBase {
 			// stop reverse
 			return '0 Stop (Reverse)'
 		}
-		
+
 		if (value == 1) {
 			// invalid?
 			return 'Stopped'
