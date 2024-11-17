@@ -42,7 +42,7 @@ export function updateFeedbacks() {
 			bgcolor: combineRgb(0, 204, 0),
 		},
 		options: [],
-		callback: (feedback) => {
+		callback: () => {
 			if (this.powerState === '1 JOIN') {
 				return true
 			} else {
@@ -50,7 +50,7 @@ export function updateFeedbacks() {
 			}
 		},
 	}
-	
+
 	feedbacks['addressFeedback'] = {
 		type: 'boolean',
 		name: 'Selected Loco',
