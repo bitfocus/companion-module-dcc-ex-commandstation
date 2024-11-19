@@ -2,7 +2,7 @@ export function updateActions() {
 	let actions = {}
 
 	actions['power'] = {
-		name: 'Track Power Control',
+		name: 'Power Control',
 		options: [
 			{
 				type: 'dropdown',
