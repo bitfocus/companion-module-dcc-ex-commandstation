@@ -2,7 +2,7 @@ export function updateActions() {
 	let actions = {}
 
 	actions['power'] = {
-		name: 'Power Control',
+		name: 'Track Power Control',
 		options: [
 			{
 				type: 'dropdown',
@@ -200,6 +200,8 @@ export function updateActions() {
 		],
 		callback: ({ options }) => {
 			this.setVariableValues({ locoAddress: options.address })
+			// request update on selected loco status
+			this.sendCmd('<t ' + options.address + '>')
 			this.checkFeedbacks('addressFeedback')
 		},
 	}
