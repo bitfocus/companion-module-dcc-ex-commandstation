@@ -14,6 +14,34 @@ This is the setup I use, many other combinations of hardware will work.
   * Enter the IP address of the Arduino running CommandStation
 * StreamDeck controller connected by USB to computer running Companion
 
+## Actions
+* Track power control for main, prog, and join
+* Loco throttle control with direction
+* Loco decoder functions 0-68 control
+* Accessory control (both types of addressing)
+* Emergency stop
+* Reset commmand station
+* Custom command
+* Set a variable for selected loco DCC address
+
+## Feedback
+Feedback can be used to update the button colours and styles. Changes made by any other throttles will be reflected in Companion.
+* Track power and join status
+* Loco decoder function states
+* Selected loco DCC address variable 
+
+## Variables
+Variables can be used for button labels
+* Command station type and version information
+* Track power status
+* Selected DCC address
+* Loco throttle data (speed and direction) for each loco controlled
+
+## Preset Buttons
+* Main and prog power control (on/off/feedback)
+* Function 0-68 control (on/off/feedback)
+* Emergency stop
+
 ## Version History
 
 ### Version 1.0.0
@@ -25,3 +53,6 @@ This is the setup I use, many other combinations of hardware will work.
 * Add loco throttle variables
 * Add power, join and selected address feedback
 * Add function presets
+
+### Version 2.1.0
+* Added feedback for enabled loco functions

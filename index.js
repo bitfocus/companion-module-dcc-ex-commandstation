@@ -214,6 +214,7 @@ class DCCEX extends InstanceBase {
 				case 'l': {
 					// loco data broadcast
 					this.updateLocoData(line)
+					this.checkFeedbacks('functionFeedback')
 					break
 				}
 				case 'p': {

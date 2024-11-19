@@ -78,5 +78,55 @@ export function updateFeedbacks() {
 		},
 	}
 
+	feedbacks['functionFeedback'] = {
+		type: 'boolean',
+		name: 'Enabled Function',
+		description: 'Indicates loco decoder function state',
+		defaultSyle: {
+			color: combineRgb(0, 0, 0),
+			bgcolor: combineRgb(0, 204, 0),
+		},
+		options: [
+			{
+				type: 'textinput',
+				label: 'DCC Address',
+				id: 'feedbackAddress',
+				default: 3,
+				useVariables: true,
+				tooltip:
+					'Use $(' +
+					this.label +
+					':locoAddress) if you want to change the DCC address using a separate select loco action button',
+			},
+			{
+				type: 'number',
+				label: 'Set function number feedback',
+				id: 'feedbackFunction',
+				default: 0,
+				min: 0,
+				max: 68,
+			},
+		],
+		callback: async (feedback, context) => {
+			var dcc = await context.parseVariablesInString(feedback.options.feedbackAddress)
+			if (Number(dcc) > 0 && Number(dcc) < 10294) {
+				// console.log('checking... ' + options.feedbackAddress + ' ' + options.feedbackFunction)
+				for (var i = 0; i < this.locos.length; i++) {
+					// console.log(this.locos[i].address)
+					if (this.locos[i].address == dcc) {
+						// calculate 2 ^ feedback function number
+						var feedbackFunctionBin = 2 ** feedback.options.feedbackFunction
+						// console.log(feedbackFunctionBin)
+						// console.log(this.locos[i].function)
+						// bitwise AND to compare values
+						if ((this.locos[i].function & feedbackFunctionBin) != 0) {
+							return true
+						}
+					}
+				}
+			}
+		},
+	}
+
 	this.setFeedbackDefinitions(feedbacks)
 }

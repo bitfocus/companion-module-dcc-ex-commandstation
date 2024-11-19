@@ -96,7 +96,19 @@ export function updatePresets() {
 					up: [],
 				},
 			],
-			feedbacks: [],
+			feedbacks: [
+				{
+					feedbackId: 'functionFeedback',
+					options: {
+						feedbackAddress: '$(' + this.label + ':locoAddress)',
+						feedbackFunction: j,
+					},
+					style: {
+						bgcolor: combineRgb(255, 255, 192),
+						color: combineRgb(255, 255, 255),
+					},
+				},
+			],
 		}
 	}
 
