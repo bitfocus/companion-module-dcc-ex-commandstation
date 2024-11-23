@@ -313,6 +313,31 @@ class DCCEX extends InstanceBase {
 		}
 	}
 
+	decodeDirection(value) {
+		// convert to forward/reverse
+		// 0 = reverse
+		// 1 = forward
+		if (value == 0) {
+			// stop reverse
+			return 0
+		}
+
+		if (value == 128) {
+			// stop forward
+			return 1
+		}
+
+		if (value > 1 && value < 128) {
+			// reverse speed
+			return 0
+		}
+
+		if (value > 128) {
+			// forward speed
+			return 1
+		}
+	}
+
 	sendCmd(cmd) {
 		this.log('debug', 'sending: ' + cmd)
 
