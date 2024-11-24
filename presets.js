@@ -135,12 +135,12 @@ export function updatePresets() {
 		],
 	}
 
-	presets['Tottle Direction'] = {
+	presets['Toggle Direction'] = {
 		type: 'button',
 		category: 'Loco',
 		name: 'Toggle Direction',
 		style: {
-			text: '< >',
+			text: '\u{23EA}\u{23E9}',
 			size: '30',
 			bgcolor: combineRgb(0, 0, 0),
 			color: combineRgb(255, 255, 255),
@@ -166,7 +166,7 @@ export function updatePresets() {
 		category: 'Loco',
 		name: 'Forward Direction',
 		style: {
-			text: '>',
+			text: '\u{23E9}',
 			size: '30',
 			bgcolor: combineRgb(0, 0, 0),
 			color: combineRgb(255, 255, 255),
@@ -192,7 +192,7 @@ export function updatePresets() {
 		category: 'Loco',
 		name: 'Reverse Direction',
 		style: {
-			text: '<',
+			text: '\u{23EA}',
 			size: '30',
 			bgcolor: combineRgb(0, 0, 0),
 			color: combineRgb(255, 255, 255),
@@ -209,6 +209,53 @@ export function updatePresets() {
 					},
 				],
 				up: [],
+			},
+		],
+	}
+
+	presets['Throttle (Rotary Control)'] = {
+		type: 'button',
+		category: 'Loco',
+		name: 'Throttle (Rotary Control)',
+		options: {
+			rotaryActions: true,
+		},
+		style: {
+			text: '\u{1F501}',
+			size: 'auto',
+			bgcolor: combineRgb(0, 0, 0),
+			color: combineRgb(255, 255, 255),
+		},
+		steps: [
+			{
+				down: [
+					{
+						actionId: 'direction',
+						options: {
+							address: '$(' + this.label + ':locoAddress)',
+							direction: 2,
+						},
+					},
+				],
+				up: [],
+				rotate_left: [
+					{
+						actionId: 'throttleRotary',
+						options: {
+							address: '$(' + this.label + ':locoAddress)',
+							direction: 0,
+						},
+					},
+				],
+				rotate_right: [
+					{
+						actionId: 'throttleRotary',
+						options: {
+							address: '$(' + this.label + ':locoAddress)',
+							direction: 1,
+						},
+					},
+				],
 			},
 		],
 	}
