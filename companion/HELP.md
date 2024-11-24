@@ -17,6 +17,8 @@ This is the setup I use, many other combinations of hardware will work.
 ## Actions
 * Track power control for main, prog, and join
 * Loco throttle control with direction
+* Loco rotary throttle control
+* Loco direction control
 * Loco decoder functions 0-68 control
 * Accessory control (both types of addressing)
 * Emergency stop
@@ -40,7 +42,7 @@ Variables can be used for button labels
 ## Preset Buttons
 * Main and prog power control (on/off/feedback)
 * Function 0-68 control (on/off/feedback)
-* Emergency stop
+* Emergency stop, Direction, Rotary throttle
 
 ## Version History
 
@@ -56,3 +58,5 @@ Variables can be used for button labels
 
 ### Version 2.1.0
 * Added feedback for enabled loco functions
+* Added change direction action and preset
+* Added rotary throttle control action
