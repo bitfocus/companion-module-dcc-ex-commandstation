@@ -89,7 +89,7 @@ export function updateActions() {
 		},
 	}
 
-	actions['Direction'] = {
+	actions['direction'] = {
 		name: 'Throttle Direction',
 		options: [
 			{

@@ -135,5 +135,81 @@ export function updatePresets() {
 		],
 	}
 
+	presets['Tottle Direction'] = {
+		type: 'button',
+		category: 'Loco',
+		name: 'Toggle Direction',
+		style: {
+			text: '< >',
+			size: '30',
+			bgcolor: combineRgb(0, 0, 0),
+			color: combineRgb(255, 255, 255),
+		},
+		steps: [
+			{
+				down: [
+					{
+						actionId: 'direction',
+						options: {
+							address: '$(' + this.label + ':locoAddress)',
+							direction: 2,
+						},
+					},
+				],
+				up: [],
+			},
+		],
+	}
+	presets['Forward Direction'] = {
+		type: 'button',
+		category: 'Loco',
+		name: 'Forward Direction',
+		style: {
+			text: '>',
+			size: '30',
+			bgcolor: combineRgb(0, 0, 0),
+			color: combineRgb(255, 255, 255),
+		},
+		steps: [
+			{
+				down: [
+					{
+						actionId: 'direction',
+						options: {
+							address: '$(' + this.label + ':locoAddress)',
+							direction: 1,
+						},
+					},
+				],
+				up: [],
+			},
+		],
+	}
+	presets['Reverse Direction'] = {
+		type: 'button',
+		category: 'Loco',
+		name: 'Reverse Direction',
+		style: {
+			text: '<',
+			size: '30',
+			bgcolor: combineRgb(0, 0, 0),
+			color: combineRgb(255, 255, 255),
+		},
+		steps: [
+			{
+				down: [
+					{
+						actionId: 'direction',
+						options: {
+							address: '$(' + this.label + ':locoAddress)',
+							direction: 0,
+						},
+					},
+				],
+				up: [],
+			},
+		],
+	}
+
 	this.setPresetDefinitions(presets)
 }
