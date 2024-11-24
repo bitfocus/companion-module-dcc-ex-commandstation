@@ -89,27 +89,8 @@ export function updateActions() {
 		},
 	}
 
-	// actions['Direction'] = {
-	// 	name: 'Set Throttle Direction',
-	// 	options: [
-	// 		{
-	// 			type: 'dropdown',
-	// 			label: 'Direction',
-	// 			id: 'direction',
-	// 			default: '>',
-	// 			choices: [
-	// 				{ id: '>', label: 'Forward' },
-	// 				{ id: '<', label: 'Reverse' },
-	// 			],
-	// 		},
-	// 	],
-	// 	callback: ({ options }) => {
-	// 		this.setVariableValues({ throttleDirection: options.direction })
-	// 	},
-	// }
-
-	actions['throttleRotary'] = {
-		name: 'Throttle (Rotary)',
+	actions['Direction'] = {
+		name: 'Throttle Direction',
 		options: [
 			{
 				type: 'textinput',
@@ -123,14 +104,73 @@ export function updateActions() {
 					':locoAddress) if you want to change the DCC address using a separate select loco action button',
 			},
 			{
-				type: 'number',
-				label: 'Step',
-				id: 'step',
+				type: 'dropdown',
+				label: 'Direction',
+				id: 'direction',
 				default: 1,
-				min: 1,
-				max: 10,
-				tooltip: 'Adjust by this number',
+				choices: [
+					{ id: 1, label: 'Forward' },
+					{ id: 0, label: 'Reverse' },
+					{ id: 2, label: 'Toggle' },
+				],
 			},
+		],
+		callback: async (action, context) => {
+			var dcc = await context.parseVariablesInString(action.options.address)
+			var currentSpeed = undefined
+			var currentDirection = undefined
+			var newDirection = undefined
+
+			if (Number(dcc) > 0 && Number(dcc) < 10294) {
+				for (var i = 0; i < this.locos.length; i++) {
+					if (this.locos[i].address == dcc) {
+						currentSpeed = this.speedTable[Number(this.locos[i].speedByte)].speed
+						currentDirection = this.speedTable[Number(this.locos[i].speedByte)].dir
+						// console.log('currentSpeed: ' + currentSpeed)
+						// console.log('currentDirection: ' + currentDirection)
+					}
+					if (currentSpeed == -1) {
+						// stopped
+						return
+					}
+				}
+				if (action.options.direction == 2) {
+					// toggle
+					newDirection = currentDirection ? 0 : 1
+				} else {
+					newDirection = action.options.direction
+				}
+				var cmd = '<t ' + dcc + ' ' + currentSpeed + ' ' + newDirection + '>'
+				this.sendCmd(cmd)
+			} else {
+				this.log('warn', dcc + ' is not a valid DCC address')
+			}
+		},
+	}
+
+	actions['throttleRotary'] = {
+		name: 'Throttle Speed (Rotary)',
+		options: [
+			{
+				type: 'textinput',
+				label: 'DCC Address',
+				id: 'address',
+				default: 3,
+				useVariables: true,
+				tooltip:
+					'Use $(' +
+					this.label +
+					':locoAddress) if you want to change the DCC address using a separate select loco action button',
+			},
+			// {
+			// 	type: 'number',
+			// 	label: 'Step',
+			// 	id: 'step',
+			// 	default: 1,
+			// 	min: 1,
+			// 	max: 10,
+			// 	tooltip: 'Adjust by this number',
+			// },
 			{
 				type: 'dropdown',
 				label: 'Direction',
@@ -157,28 +197,32 @@ export function updateActions() {
 
 						console.log('currentIndex: ' + this.locos[i].speedByte)
 
-						if ((currentIndex == 0 || currentIndex == 128 || currentIndex == 129) && action.options.direction == 0) {
-							// minimum for decrease throttle
-							return
-						}
-						if ((currentIndex == 127 || currentIndex == 255) && action.options.direction == 1) {
-							// maximum for increase throttle
-							return
-						}
 						if (action.options.direction == 1) {
 							// increment turn right
+							if (currentIndex == 127 || currentIndex == 255) {
+								// maximum for increase throttle
+								return
+							}
 							if (currentIndex == 128 || currentIndex == 0) {
 								// skip 1 and 129
 								currentIndex = currentIndex + 1
 							}
-							newIndex = currentIndex + action.options.step
-						} else {
+							// increase
+							newIndex = currentIndex + 1
+						}
+
+						if (action.options.direction == 0) {
 							// decrement turn left
+							if (currentIndex == 0 || currentIndex == 128 || currentIndex == 129) {
+								// minimum for decrease throttle
+								return
+							}
 							if (currentIndex == 130 || currentIndex == 2) {
 								// skip 1 and 129
 								currentIndex = currentIndex - 1
 							}
-							newIndex = currentIndex - action.options.step
+							// decrease
+							newIndex = currentIndex - 1
 						}
 
 						console.log('newIndex:' + newIndex)
