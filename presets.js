@@ -160,6 +160,7 @@ export function updatePresets() {
 			},
 		],
 	}
+
 	presets['Forward Direction'] = {
 		type: 'button',
 		category: 'Loco',
@@ -185,6 +186,7 @@ export function updatePresets() {
 			},
 		],
 	}
+
 	presets['Reverse Direction'] = {
 		type: 'button',
 		category: 'Loco',
