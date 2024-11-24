@@ -288,23 +288,23 @@ class DCCEX extends InstanceBase {
 	}
 
 	decodeSpeedByte(value) {
-		console.log('decode: ' + value)
+		// console.log('decode: ' + value)
 		var index = Number(value)
 		return this.speedTable[index].text
 	}
 
 	createSpeedTable() {
-		this.speedTable[0] = { index: 0, speed: 0, speedSet: 0, dir: 0, text: '0 Reverse (Idle)' }
-		this.speedTable[1] = { index: 1, speed: -1, speedSet: 1, dir: 0, text: 'Stop' }
+		this.speedTable[0] = { speed: 0, speedSet: 0, dir: 0, text: '0 Reverse (Idle)' }
+		this.speedTable[1] = { speed: -1, speedSet: 1, dir: 0, text: 'Stop' }
 		for (var j = 2; j < 128; j++) {
-			this.speedTable[j] = { index: j, speed: j - 1, speedSet: j, dir: 0, text: [j - 1] + ' Reverse' }
+			this.speedTable[j] = { speed: j - 1, speedSet: j, dir: 0, text: [j - 1] + ' Reverse' }
 		}
 
-		this.speedTable[128] = { index: 128, speed: 0, speedSet: 0, dir: 1, text: '0 Forward (Idle)' }
-		this.speedTable[129] = { index: 129, speed: -1, speedSet: 1, dir: 1, text: 'Stop' }
+		this.speedTable[128] = { speed: 0, speedSet: 0, dir: 1, text: '0 Forward (Idle)' }
+		this.speedTable[129] = { speed: -1, speedSet: 1, dir: 1, text: 'Stop' }
 
 		for (var k = 130; k < 256; k++) {
-			this.speedTable[k] = { index: k, speed: k - 129, speedSet: k - 128, dir: 1, text: [k - 129] + ' Forward' }
+			this.speedTable[k] = { speed: k - 129, speedSet: k - 128, dir: 1, text: [k - 129] + ' Forward' }
 		}
 
 		// for (var i = 0; i < this.speedTable.length; i++) {
