@@ -65,7 +65,7 @@ export function updateActions() {
 				id: 'speed',
 				default: 0,
 				min: 0,
-				max: 127,
+				max: 126,
 			},
 			{
 				type: 'dropdown',
@@ -83,6 +83,118 @@ export function updateActions() {
 			if (Number(dcc) > 0 && Number(dcc) < 10294) {
 				var cmd = '<t ' + dcc + ' ' + action.options.speed + ' ' + action.options.direction + '>'
 				this.sendCmd(cmd)
+			} else {
+				this.log('warn', dcc + ' is not a valid DCC address')
+			}
+		},
+	}
+
+	// actions['Direction'] = {
+	// 	name: 'Set Throttle Direction',
+	// 	options: [
+	// 		{
+	// 			type: 'dropdown',
+	// 			label: 'Direction',
+	// 			id: 'direction',
+	// 			default: '>',
+	// 			choices: [
+	// 				{ id: '>', label: 'Forward' },
+	// 				{ id: '<', label: 'Reverse' },
+	// 			],
+	// 		},
+	// 	],
+	// 	callback: ({ options }) => {
+	// 		this.setVariableValues({ throttleDirection: options.direction })
+	// 	},
+	// }
+
+	actions['throttleRotary'] = {
+		name: 'Throttle (Rotary)',
+		options: [
+			{
+				type: 'textinput',
+				label: 'DCC Address',
+				id: 'address',
+				default: 3,
+				useVariables: true,
+				tooltip:
+					'Use $(' +
+					this.label +
+					':locoAddress) if you want to change the DCC address using a separate select loco action button',
+			},
+			{
+				type: 'number',
+				label: 'Step',
+				id: 'step',
+				default: 1,
+				min: 1,
+				max: 10,
+				tooltip: 'Adjust by this number',
+			},
+			{
+				type: 'dropdown',
+				label: 'Direction',
+				id: 'direction',
+				default: 1,
+				choices: [
+					{ id: 1, label: 'Increment (rotate right)' },
+					{ id: 0, label: 'Decrement (rotate left)' },
+				],
+			},
+		],
+		callback: async (action, context) => {
+			var dcc = await context.parseVariablesInString(action.options.address)
+			var newSpeed = undefined
+			var newDirection = undefined
+			var newIndex = undefined
+
+			if (Number(dcc) > 0 && Number(dcc) < 10294) {
+				// console.log(this.locos)
+				for (var i = 0; i < this.locos.length; i++) {
+					// console.log(this.locos[i].address)
+					if (this.locos[i].address == dcc) {
+						var currentIndex = Number(this.locos[i].speedByte)
+
+						console.log('currentIndex: ' + this.locos[i].speedByte)
+
+						if ((currentIndex == 0 || currentIndex == 128 || currentIndex == 129) && action.options.direction == 0) {
+							// minimum for decrease throttle
+							return
+						}
+						if ((currentIndex == 127 || currentIndex == 255) && action.options.direction == 1) {
+							// maximum for increase throttle
+							return
+						}
+						if (action.options.direction == 1) {
+							// increment turn right
+							if (currentIndex == 128 || currentIndex == 0) {
+								// skip 1 and 129
+								currentIndex = currentIndex + 1
+							}
+							newIndex = currentIndex + action.options.step
+						} else {
+							// decrement turn left
+							if (currentIndex == 130 || currentIndex == 2) {
+								// skip 1 and 129
+								currentIndex = currentIndex - 1
+							}
+							newIndex = currentIndex - action.options.step
+						}
+
+						console.log('newIndex:' + newIndex)
+						newSpeed = this.speedTable[newIndex].speed
+						newDirection = this.speedTable[newIndex].dir
+
+						console.log('newSpeed: ' + newSpeed)
+						console.log('newDirection: ' + newDirection)
+					}
+				}
+				if (newSpeed != undefined && newDirection != undefined) {
+					var cmd = '<t ' + dcc + ' ' + newSpeed + ' ' + newDirection + '>'
+					this.sendCmd(cmd)
+				} else {
+					this.log('warn', 'Unable to adjust speed')
+				}
 			} else {
 				this.log('warn', dcc + ' is not a valid DCC address')
 			}
@@ -187,7 +299,7 @@ export function updateActions() {
 	}
 
 	actions['locoSelect'] = {
-		name: 'Set Loco Address',
+		name: 'Set Loco Address Variable',
 		options: [
 			{
 				type: 'number',
@@ -222,74 +334,9 @@ export function updateActions() {
 	}
 
 	this.setActionDefinitions(actions)
+
+	function clamp(val, min, max) {
+		// limit val between min and max
+		return val > max ? max : val < min ? min : val
+	}
 }
-
-// 		'direction': {
-// 			label: 'Direction Preset',
-// 			options: [
-// 				{
-// 					type: 'dropdown',
-// 					label: 'Direction',
-// 					id: 'direction_preset',
-// 					default: '1',
-// 					choices: [
-// 					{ id: '1', label: 'Forward'},
-// 					{ id: '0', label: 'Reverse'},
-// 					{ id: 'toggle', label: 'Toggle'}]
-// 				}
-// 			]
-// 		},
-
-// 		'info': {
-// 			label: 'Get State',
-// 			options: [
-// 				{
-// 				type: 'dropdown',
-// 				label: 'Information to display in Companion log',
-// 				id: 'infoCommand',
-// 				default: 'c',
-// 				choices: [
-// 					{ id: 'c', label: 'Show main track current'},
-// 					{ id: 's', label: 'Show command station status'},
-// 					{ id: 'Q', label: 'List status of all sensors'},
-// 					{ id: 'S', label: 'List all defined sensors'},
-// 					{ id: 'T', label: 'List all defined turnouts'},
-// 					{ id: 'Z', label: 'List all defined output pins'},
-// 					]
-// 				}
-// 			]
-// 		},
-
-// 	});
-// };
-//
-// 	switch (action.action) {
-//
-
-// 		case 'direction': {
-//
-// 			if (opt.direction_preset === 'toggle') {
-// 				self.direction = self.direction ? 0 : 1
-// 			} else {
-// 				self.direction = opt.direction_preset
-// 			}
-// 			self.setVariable('DirectionPst',self.direction)
-// 			console.log('direction preset: ' + self.direction)
-// 		}
-// 		case 'throttle': {
-//
-// 			if (opt.direction === 'pst') {
-// 				self.sendCmd('<t 1 ' + opt.dccAddress + ' ' + opt.speed + ' ' + self.direction + '>')
-// 				console.log('throttle: ' + opt.dccAddress + ' ' + opt.speed + ' ' + self.direction)
-// 			} else {
-// 				self.sendCmd('<t 1 ' + opt.dccAddress + ' ' + opt.speed + ' ' + opt.direction + '>')
-// 				console.log('throttle: ' + opt.dccAddress + ' ' + opt.speed + ' ' + opt.direction)
-// 			}
-// 			break
-// 		}
-
-// 		case 'info': {
-// 			console.log('info: ' + opt.infoCommand)
-// 			self.sendCmd('<' + opt.infoCommand + '>')
-// 			break
-// 		}
