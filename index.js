@@ -91,10 +91,10 @@ class DCCEX extends InstanceBase {
 				name: 'Selected Loco DCC Address',
 				variableId: 'locoAddress',
 			},
-			// {
-			// 	name: 'Throttle Direction',
-			// 	variableId: 'throttleDirection',
-			// },
+			{
+				name: 'Loco Raw Data',
+				variableId: 'locoData',
+			},
 		]
 
 		this.createSpeedTable()
@@ -220,6 +220,7 @@ class DCCEX extends InstanceBase {
 				case 'l': {
 					// loco data broadcast
 					this.updateLocoData(line)
+					this.setVariableValues({ locoData: line })
 					this.checkFeedbacks('functionFeedback')
 					break
 				}
