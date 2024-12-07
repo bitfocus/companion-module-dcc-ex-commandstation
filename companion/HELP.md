@@ -60,3 +60,6 @@ Variables can be used for button labels
 * Added feedback for enabled loco functions
 * Added change direction action and preset
 * Added rotary throttle control action
+
+### Version 2.2.0
+* Added variable to hold last loco data broadcast message received
