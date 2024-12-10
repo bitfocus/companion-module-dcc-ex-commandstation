@@ -25,12 +25,14 @@ This is the setup I use, many other combinations of hardware will work.
 * Reset commmand station
 * Custom command
 * Set a variable for selected loco DCC address
+* Control a turnout/point
 
 ## Feedback
 Feedback can be used to update the button colours and styles. Changes made by any other throttles will be reflected in Companion.
 * Track power and join status
 * Loco decoder function states
-* Selected loco DCC address variable 
+* Selected loco DCC address variable
+* Turnout/Point is closed/thrown
 
 ## Variables
 Variables can be used for button labels
@@ -43,6 +45,7 @@ Variables can be used for button labels
 * Main and prog power control (on/off/feedback)
 * Function 0-68 control (on/off/feedback)
 * Emergency stop, Direction, Rotary throttle
+* Turnouts/Points (throw/close/feedback)
 
 ## Version History
 
@@ -63,3 +66,4 @@ Variables can be used for button labels
 
 ### Version 2.2.0
 * Added variable to hold last loco data broadcast message received
+* Added control and feedback for turnouts/points

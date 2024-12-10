@@ -128,5 +128,36 @@ export function updateFeedbacks() {
 		},
 	}
 
+	feedbacks['turnoutFeedback'] = {
+		type: 'boolean',
+		name: 'Turnout/Point Status',
+		description: 'Indicates turnout/point state',
+		defaultSyle: {
+			color: combineRgb(0, 0, 0),
+			bgcolor: combineRgb(0, 204, 0),
+		},
+		options: [
+			{
+				type: 'number',
+				label: 'Set turnout/point number feedback',
+				id: 'turnoutId',
+				default: 0,
+				min: 0,
+				max: 32767,
+			},
+		],
+		callback: ({ options }) => {
+			for (var j = 0; j < this.turnouts.length; j++) {
+				if (this.turnouts[j].id == options.turnoutId) {
+					if (this.turnouts[j].state == 1) {
+						return true
+					} else {
+						return false
+					}
+				}
+			}
+		},
+	}
+
 	this.setFeedbackDefinitions(feedbacks)
 }

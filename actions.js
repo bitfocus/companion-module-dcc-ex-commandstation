@@ -342,6 +342,35 @@ export function updateActions() {
 		},
 	}
 
+	actions['turnout'] = {
+		name: 'Turnout/Point Control',
+		options: [
+			{
+				type: 'number',
+				label: 'Address',
+				id: 'address',
+				default: 0,
+				min: 0,
+				max: 32767,
+				useVariables: false,
+			},
+			{
+				type: 'dropdown',
+				label: 'State',
+				id: 'state',
+				default: 1,
+				choices: [
+					{ id: 1, label: 'Throw' },
+					{ id: 0, label: 'Close' },
+				],
+			},
+		],
+		callback: ({ options }) => {
+			var cmd = '<T ' + options.address + ' ' + options.state + '>'
+			this.sendCmd(cmd)
+		},
+	}
+
 	actions['locoSelect'] = {
 		name: 'Set Loco Address Variable',
 		options: [

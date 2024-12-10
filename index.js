@@ -66,6 +66,7 @@ class DCCEX extends InstanceBase {
 		this.config = config
 
 		this.locos = []
+		this.turnouts = []
 		this.speedTable = []
 		this.locoVariables = []
 		this.powerState = null
@@ -205,7 +206,31 @@ class DCCEX extends InstanceBase {
 			switch (line.substr(0, 1)) {
 				// examine first character only
 				case 'H': {
-					// defined turnouts/Points
+					// defined turnouts/points
+
+					var turnoutsArr = line.split(' ')
+					var existing = false
+
+					var stateText = Number(turnoutsArr[2]) ? 'Thrown' : 'Closed'
+
+					this.log('info', 'Turnout/Point ' + turnoutsArr[1] + ' is ' + stateText)
+					// console.log(Number(turnoutsArr[1]))
+
+					// check if existing
+					for (var i = 0; i < this.turnouts.length; i++) {
+						// console.log(i + '>>' + this.turnouts[i].id)
+						if (this.turnouts[i].id == turnoutsArr[1]) {
+							// update
+							existing = true
+							this.turnouts[i].state = Number(turnoutsArr[2])
+						}
+					}
+					if (existing == false) {
+						// push new data to array
+						this.turnouts.push({ id: Number(turnoutsArr[1]), state: Number(turnoutsArr[2]) })
+					}
+					this.checkFeedbacks('turnoutFeedback')
+					// console.log(this.turnouts)
 					break
 				}
 				case 'i': {

@@ -112,6 +112,87 @@ export function updatePresets() {
 		}
 	}
 
+	for (let k = 0; k <= 9; k++) {
+		presets['TurnoutThrow' + k] = {
+			type: 'button',
+			category: 'Turnouts/Points',
+			name: 'Throw Turnout/Point ' + k,
+			style: {
+				text: 'Throw ' + k,
+				size: '18',
+				bgcolor: combineRgb(0, 0, 0),
+				color: combineRgb(255, 255, 255),
+			},
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'turnout',
+							options: {
+								address: k,
+								state: 1,
+							},
+						},
+					],
+					up: [],
+				},
+			],
+			feedbacks: [
+				{
+					feedbackId: 'turnoutFeedback',
+					options: {
+						turnoutId: k,
+					},
+					style: {
+						bgcolor: combineRgb(255, 192, 255),
+						color: combineRgb(255, 255, 255),
+					},
+				},
+			],
+		}
+	}
+
+	for (let k = 0; k <= 9; k++) {
+		presets['TurnoutClose' + k] = {
+			type: 'button',
+			category: 'Turnouts/Points',
+			name: 'Close Turnout/Point ' + k,
+			style: {
+				text: 'Close ' + k,
+				size: '18',
+				bgcolor: combineRgb(0, 0, 0),
+				color: combineRgb(255, 255, 255),
+			},
+			steps: [
+				{
+					down: [
+						{
+							actionId: 'turnout',
+							options: {
+								address: k,
+								state: 0,
+							},
+						},
+					],
+					up: [],
+				},
+			],
+			feedbacks: [
+				{
+					feedbackId: 'turnoutFeedback',
+					invert: true,
+					options: {
+						turnoutId: k,
+					},
+					style: {
+						bgcolor: combineRgb(255, 192, 255),
+						color: combineRgb(255, 255, 255),
+					},
+				},
+			],
+		}
+	}
+
 	presets['All Stop'] = {
 		type: 'button',
 		category: 'Loco',
