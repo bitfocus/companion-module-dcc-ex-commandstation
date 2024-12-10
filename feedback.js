@@ -145,11 +145,21 @@ export function updateFeedbacks() {
 				min: 0,
 				max: 32767,
 			},
+			{
+				type: 'dropdown',
+				label: 'State',
+				id: 'state',
+				default: 1,
+				choices: [
+					{ id: 1, label: 'Thrown' },
+					{ id: 0, label: 'Closed' },
+				],
+			},
 		],
 		callback: ({ options }) => {
 			for (var j = 0; j < this.turnouts.length; j++) {
 				if (this.turnouts[j].id == options.turnoutId) {
-					if (this.turnouts[j].state == 1) {
+					if (this.turnouts[j].state == options.state) {
 						return true
 					} else {
 						return false

@@ -142,9 +142,10 @@ export function updatePresets() {
 					feedbackId: 'turnoutFeedback',
 					options: {
 						turnoutId: k,
+						state: 1,
 					},
 					style: {
-						bgcolor: combineRgb(255, 192, 255),
+						bgcolor: combineRgb(64, 64, 255),
 						color: combineRgb(255, 255, 255),
 					},
 				},
@@ -180,12 +181,12 @@ export function updatePresets() {
 			feedbacks: [
 				{
 					feedbackId: 'turnoutFeedback',
-					invert: true,
 					options: {
 						turnoutId: k,
+						state: 0,
 					},
 					style: {
-						bgcolor: combineRgb(255, 192, 255),
+						bgcolor: combineRgb(64, 64, 255),
 						color: combineRgb(255, 255, 255),
 					},
 				},
