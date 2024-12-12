@@ -1,8 +1,8 @@
 import { InstanceBase, InstanceStatus, Regex, runEntrypoint, TCPHelper } from '@companion-module/base'
 import { updateActions } from './actions.js'
-// import { updateVariables } from './variables.js'
 import { updateFeedbacks } from './feedback.js'
 import { updatePresets } from './presets.js'
+import { upgradeScripts } from './upgrades.js'
 
 class DCCEX extends InstanceBase {
 	constructor(internal) {
@@ -11,7 +11,7 @@ class DCCEX extends InstanceBase {
 		this.updateActions = updateActions.bind(this)
 		this.updateFeedbacks = updateFeedbacks.bind(this)
 		this.updatePresets = updatePresets.bind(this)
-		// this.updateVariables = updateVariables.bind(this)
+		this.upgradeScripts = upgradeScripts.bind(this)
 	}
 
 	getConfigFields() {
@@ -68,6 +68,11 @@ class DCCEX extends InstanceBase {
 		console.log('init ' + this.label)
 
 		this.config = config
+		
+		if (this.config.region == undefined) {
+			// not in previous version of module
+			this.config.region = 'Point'
+		}
 
 		this.locos = []
 		this.turnouts = []
@@ -362,4 +367,4 @@ class DCCEX extends InstanceBase {
 	}
 }
 
-runEntrypoint(DCCEX, [])
+runEntrypoint(DCCEX, upgradeScripts())
