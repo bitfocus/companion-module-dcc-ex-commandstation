@@ -40,13 +40,17 @@ class DCCEX extends InstanceBase {
 				regex: Regex.Port,
 				required: true,
 			},
-			// {
-			// 	type: 'checkbox',
-			// 	id: 'debuglog',
-			// 	label: 'Show all return values in debug log',
-			// 	width: 6,
-			// 	default: false,
-			// },
+			{
+				type: 'dropdown',
+				id: 'region',
+				label: 'User interface labels',
+				width: 6,
+				default: 'Point',
+				choices: [
+					{ id: 'Point', label: 'Points' },
+					{ id: 'Turnout', label: 'Turnouts' },
+				],
+			},
 		]
 	}
 

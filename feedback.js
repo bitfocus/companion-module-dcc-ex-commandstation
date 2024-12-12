@@ -130,8 +130,8 @@ export function updateFeedbacks() {
 
 	feedbacks['turnoutFeedback'] = {
 		type: 'boolean',
-		name: 'Turnout/Point Status',
-		description: 'Indicates turnout/point state',
+		name: this.config.region + ' Status',
+		description: 'Indicates if ' + this.config.region.toLowerCase() + ' is thrown or closed',
 		defaultSyle: {
 			color: combineRgb(0, 0, 0),
 			bgcolor: combineRgb(0, 204, 0),
@@ -139,7 +139,7 @@ export function updateFeedbacks() {
 		options: [
 			{
 				type: 'number',
-				label: 'Set turnout/point number feedback',
+				label: 'Set ' + this.config.region + ' id',
 				id: 'turnoutId',
 				default: 0,
 				min: 0,

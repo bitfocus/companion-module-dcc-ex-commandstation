@@ -343,7 +343,7 @@ export function updateActions() {
 	}
 
 	actions['turnout'] = {
-		name: 'Turnout/Point Control',
+		name: this.config.region + ' Control',
 		options: [
 			{
 				type: 'number',

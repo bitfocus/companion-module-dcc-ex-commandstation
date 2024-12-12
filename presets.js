@@ -115,8 +115,8 @@ export function updatePresets() {
 	for (let k = 0; k <= 9; k++) {
 		presets['TurnoutThrow' + k] = {
 			type: 'button',
-			category: 'Turnouts/Points',
-			name: 'Throw Turnout/Point ' + k,
+			category: this.config.region + 's',
+			name: 'Throw ' + this.config.region + ' ' + k,
 			style: {
 				text: 'Throw ' + k,
 				size: '18',
@@ -156,8 +156,8 @@ export function updatePresets() {
 	for (let k = 0; k <= 9; k++) {
 		presets['TurnoutClose' + k] = {
 			type: 'button',
-			category: 'Turnouts/Points',
-			name: 'Close Turnout/Point ' + k,
+			category: this.config.region + 's',
+			name: 'Close ' + this.config.region + ' ' + k,
 			style: {
 				text: 'Close ' + k,
 				size: '18',
