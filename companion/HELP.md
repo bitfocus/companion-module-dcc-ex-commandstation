@@ -67,3 +67,4 @@ Variables can be used for button labels
 ### Version 2.2.0
 * Added variable to hold last loco data broadcast message received
 * Added control and feedback for turnouts/points
+* Added regional labels
