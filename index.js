@@ -222,7 +222,7 @@ class DCCEX extends InstanceBase {
 
 					var stateText = Number(turnoutsArr[2]) ? 'Thrown' : 'Closed'
 
-					this.log('info', 'Turnout/Point ' + turnoutsArr[1] + ' is ' + stateText)
+					this.log('info', `${this.config.region} ${turnoutsArr[1]} is ${stateText}`)
 					// console.log(Number(turnoutsArr[1]))
 
 					// check if existing
