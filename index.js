@@ -68,7 +68,7 @@ class DCCEX extends InstanceBase {
 		console.log('init ' + this.label)
 
 		this.config = config
-		
+
 		if (this.config.region == undefined) {
 			// not in previous version of module
 			this.config.region = 'Point'
