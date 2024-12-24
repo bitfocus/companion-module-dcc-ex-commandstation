@@ -367,4 +367,4 @@ class DCCEX extends InstanceBase {
 	}
 }
 
-runEntrypoint(DCCEX, upgradeScripts())
+runEntrypoint(DCCEX, upgradeScripts)

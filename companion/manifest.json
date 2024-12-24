@@ -3,7 +3,7 @@
 	"name": "dcc-ex-commandstation",
 	"shortname": "dcc-ex",
 	"description": "Companion Module for DCC-EX Command Station",
-	"version": "2.2.0",
+	"version": "2.2.1",
 	"license": "MIT",
 	"repository": "git+https://github.com/bitfocus/companion-module-dcc-ex-commandstation.git",
 	"bugs": "https://github.com/bitfocus/companion-module-dcc-ex-commandstation/issues",

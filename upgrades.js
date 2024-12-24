@@ -1,8 +1,7 @@
-export function upgradeScripts(context, props) {
-	const result = {
+export function upgradeScripts() {
+	return {
 		updatedConfig: null,
-		updatedActions: null,
-		updatedFeedbacks: null,
+		updatedActions: [],
+		updatedFeedbacks: [],
 	}
-	return result
 }
