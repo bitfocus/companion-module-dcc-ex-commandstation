@@ -1,6 +1,6 @@
 {
 	"name": "dcc-ex-commandstationp",
-	"version": "2.2.1",
+	"version": "2.3.0",
 	"main": "index.js",
 	"type": "module",
 	"scripts": {
@@ -12,7 +12,7 @@
 	},
 	"license": "MIT",
 	"dependencies": {
-		"@companion-module/base": "~1.11.1"
+		"@companion-module/base": "~1.11.3"
 	},
 	"devDependencies": {
 		"@companion-module/tools": "~2.1.0",
