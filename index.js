@@ -11,7 +11,7 @@ class DCCEX extends InstanceBase {
 		this.updateActions = updateActions.bind(this)
 		this.updateFeedbacks = updateFeedbacks.bind(this)
 		this.updatePresets = updatePresets.bind(this)
-		this.upgradeScripts = upgradeScripts.bind(this)
+		// this.upgradeScripts = upgradeScripts.bind(this)
 	}
 
 	getConfigFields() {
@@ -138,8 +138,7 @@ class DCCEX extends InstanceBase {
 	}
 
 	initTCP() {
-		console.log('initTCP ' + this.config.host + ':' + this.config.port)
-		console.log
+		
 
 		this.receiveBuffer = ''
 
@@ -148,7 +147,8 @@ class DCCEX extends InstanceBase {
 			delete this.socket
 		}
 
-		if (this.config.host) {
+		if (this.config.host && this.config.port) {
+			console.log('initTCP ' + this.config.host + ':' + this.config.port)
 			this.socket = new TCPHelper(this.config.host, this.config.port)
 
 			this.socket.on('status_change', (status, message) => {
@@ -201,6 +201,8 @@ class DCCEX extends InstanceBase {
 				// console.log('receiveline: ' + line)
 				this.processDeviceInformation(line)
 			})
+		} else {
+			console.log('DCC-EX connection IP and/or port are not defined')
 		}
 	}
 
@@ -367,4 +369,4 @@ class DCCEX extends InstanceBase {
 	}
 }
 
-runEntrypoint(DCCEX, upgradeScripts)
+runEntrypoint(DCCEX, [])
