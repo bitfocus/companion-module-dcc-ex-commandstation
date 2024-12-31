@@ -230,12 +230,12 @@ export function updateActions() {
 								newIndex = currentIndex - action.options.step
 							}
 						}
-						
+
 						if (newIndex == 1) {
 							// exclude stop
 							newIndex = 0
 						}
-						
+
 						if (newIndex == 129) {
 							// exclude stop
 							newIndex = 128
@@ -393,8 +393,20 @@ export function updateActions() {
 		name: 'Set Loco Address Variable',
 		options: [
 			{
+				type: 'dropdown',
+				label: 'Loco address variable (A, B, C, D)',
+				id: 'loco',
+				default: 'A',
+				choices: [
+					{ id: 'A', label: 'A' },
+					{ id: 'B', label: 'B' },
+					{ id: 'C', label: 'C' },
+					{ id: 'D', label: 'D' },
+				],
+			},
+			{
 				type: 'number',
-				label: 'Set DCC address for currently selected loco variable',
+				label: 'DCC address for currently selected loco variable',
 				id: 'address',
 				default: 3,
 				min: 1,
@@ -402,7 +414,7 @@ export function updateActions() {
 			},
 		],
 		callback: ({ options }) => {
-			this.setVariableValues({ locoAddress: options.address })
+			this.setVariableValues({ ['locoAddress_' + options.loco]: options.address })
 			// request update on selected loco status
 			this.sendCmd('<t ' + options.address + '>')
 			this.checkFeedbacks('addressFeedback')

@@ -61,8 +61,20 @@ export function updateFeedbacks() {
 		},
 		options: [
 			{
+				type: 'dropdown',
+				label: 'Loco address variable (A, B, C, D)',
+				id: 'loco',
+				default: 'A',
+				choices: [
+					{ id: 'A', label: 'A' },
+					{ id: 'B', label: 'B' },
+					{ id: 'C', label: 'C' },
+					{ id: 'D', label: 'D' },
+				],
+			},
+			{
 				type: 'number',
-				label: 'Set DCC address for currently selected loco feedback',
+				label: 'DCC address for currently selected loco feedback',
 				id: 'feedbackAddress',
 				default: 3,
 				min: 1,
@@ -70,7 +82,7 @@ export function updateFeedbacks() {
 			},
 		],
 		callback: ({ options }) => {
-			if (this.getVariableValue('locoAddress') == options.feedbackAddress) {
+			if (this.getVariableValue( 'locoAddress_' + options.loco ) == options.feedbackAddress) {
 				return true
 			} else {
 				return false

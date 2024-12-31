@@ -98,8 +98,20 @@ class DCCEX extends InstanceBase {
 				variableId: 'power',
 			},
 			{
-				name: 'Selected Loco DCC Address',
-				variableId: 'locoAddress',
+				name: 'Selected Loco DCC Address A',
+				variableId: 'locoAddress_A',
+			},
+			{
+				name: 'Selected Loco DCC Address B',
+				variableId: 'locoAddress_B',
+			},
+			{
+				name: 'Selected Loco DCC Address C',
+				variableId: 'locoAddress_C',
+			},
+			{
+				name: 'Selected Loco DCC Address D',
+				variableId: 'locoAddress_D',
 			},
 			{
 				name: 'Loco Raw Data',
