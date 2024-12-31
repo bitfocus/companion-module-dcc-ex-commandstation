@@ -72,7 +72,7 @@ Variables can be used for button labels
 ### Version 2.2.1
 * Fix upgrade script
 
-## Version 2.3.0
+### Version 2.3.0
 * Update companion-module/base to 1.11.3
 * Small fixes and improvements
 * Added a step value to the throttle action and preset
