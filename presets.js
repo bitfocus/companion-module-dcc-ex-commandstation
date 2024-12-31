@@ -325,6 +325,7 @@ export function updatePresets() {
 						actionId: 'throttleRotary',
 						options: {
 							address: '$(' + this.label + ':locoAddress)',
+							step: 1,
 							direction: 0,
 						},
 					},
@@ -334,6 +335,7 @@ export function updatePresets() {
 						actionId: 'throttleRotary',
 						options: {
 							address: '$(' + this.label + ':locoAddress)',
+							step: 1,
 							direction: 1,
 						},
 					},

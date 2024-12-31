@@ -162,15 +162,15 @@ export function updateActions() {
 					this.label +
 					':locoAddress) if you want to change the DCC address using a separate select loco action button',
 			},
-			// {
-			// 	type: 'number',
-			// 	label: 'Step',
-			// 	id: 'step',
-			// 	default: 1,
-			// 	min: 1,
-			// 	max: 10,
-			// 	tooltip: 'Adjust by this number',
-			// },
+			{
+				type: 'number',
+				label: 'Step',
+				id: 'step',
+				default: 1,
+				min: 1,
+				max: 10,
+				tooltip: 'Adjust throttle speed by this number',
+			},
 			{
 				type: 'dropdown',
 				label: 'Direction',
@@ -201,29 +201,47 @@ export function updateActions() {
 							// increment turn right
 							if (currentIndex == 127 || currentIndex == 255) {
 								// maximum for increase throttle
-								return
+								newIndex = currentIndex
+							} else if (currentIndex == 128) {
+								// skip 129
+								newIndex = 130
+							} else if (currentIndex == 0) {
+								// skip
+								newIndex = 2
+							} else {
+								// increase
+								newIndex = currentIndex + action.options.step
 							}
-							if (currentIndex == 128 || currentIndex == 0) {
-								// skip 1 and 129
-								currentIndex = currentIndex + 1
-							}
-							// increase
-							newIndex = currentIndex + 1
 						}
 
 						if (action.options.direction == 0) {
 							// decrement turn left
 							if (currentIndex == 0 || currentIndex == 128 || currentIndex == 129) {
 								// minimum for decrease throttle
-								return
+								newIndex = currentIndex
+							} else if (currentIndex == 130) {
+								// skip 129
+								newIndex = 128
+							} else if (currentIndex == 2) {
+								// skip 1
+								newIndex = 0
+							} else {
+								// decrease
+								newIndex = currentIndex - action.options.step
 							}
-							if (currentIndex == 130 || currentIndex == 2) {
-								// skip 1 and 129
-								currentIndex = currentIndex - 1
-							}
-							// decrease
-							newIndex = currentIndex - 1
 						}
+						
+						if (newIndex == 1) {
+							// exclude stop
+							newIndex = 0
+						}
+						
+						if (newIndex == 129) {
+							// exclude stop
+							newIndex = 128
+						}
+
+						newIndex = clamp(newIndex, 0, 255)
 
 						console.log('newIndex:' + newIndex)
 						newSpeed = this.speedTable[newIndex].speed
