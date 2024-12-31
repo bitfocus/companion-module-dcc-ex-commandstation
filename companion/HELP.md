@@ -22,9 +22,9 @@ This is the setup I use, many other combinations of hardware will work.
 * Loco decoder functions 0-68 control
 * Accessory control (both types of addressing)
 * Emergency stop
-* Reset commmand station
+* Reset command station
 * Custom command
-* Set a variable for selected loco DCC address
+* Set variable (A, B, C, D) for selected loco DCC address
 * Control a turnout/point
 
 ## Feedback
@@ -71,3 +71,10 @@ Variables can be used for button labels
 
 ### Version 2.2.1
 * Fix upgrade script
+
+## Version 2.3.0
+* Update companion-module/base to 1.11.3
+* Small fixes and improvements
+* Added a step value to the throttle action and preset
+* Added additional variables (4 in total) for loco addresses
+
