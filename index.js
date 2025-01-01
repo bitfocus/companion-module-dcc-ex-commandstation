@@ -55,12 +55,10 @@ class DCCEX extends InstanceBase {
 	}
 
 	async destroy() {
-		this.log('debug', 'destroy ' + this.id + ' ' + this.label)
+		this.log('debug', 'Destroy ' + this.id + ' ' + this.label)
 
-		var self = this
-
-		if (self.socket !== undefined) {
-			self.socket.destroy()
+		if (this.socket !== undefined) {
+			this.socket.destroy()
 		}
 	}
 
@@ -150,8 +148,6 @@ class DCCEX extends InstanceBase {
 	}
 
 	initTCP() {
-		
-
 		this.receiveBuffer = ''
 
 		if (this.socket !== undefined) {
